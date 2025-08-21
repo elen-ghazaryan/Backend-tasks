@@ -1,0 +1,13 @@
+{
+  "name": "homework-1",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["graph", "shortestPath", "algorithm"],
+  "author": "",
+  "license": "ISC",
+  "description": "A Node.js custom module for graph operations, including cycle detection and shortest path calculation.",
+  "type": "module"
+}
