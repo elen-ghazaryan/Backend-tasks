@@ -1,0 +1,18 @@
+h1 Users List
+
+if users.length
+  table(border="1")
+    thead
+      tr
+        th Name
+        th Surname
+    tbody
+      each user in users
+        tr
+          td= user.name
+          td= user.surname
+else
+  p No users found.
+
+a(href="/") Go to Home
+
