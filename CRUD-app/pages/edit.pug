@@ -1,0 +1,10 @@
+form(action="/user/edit/"+user.id method="POST") 
+  div
+    label Name
+    input(name="name" required value=user.name) 
+    
+  div
+    label Surname
+    input(name="surname" required value=user.surname) 
+    
+  button Save

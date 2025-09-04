@@ -1,0 +1,14 @@
+div
+  h1 Home Page
+  a(href="/add") Add New User
+  
+  if users.length
+    ul
+      each user in users
+        li #{user.name} #{user.surname}
+        a(href=`/user/delete/${user.id}`) Delete
+        a(href=`/user/edit/${user.id}`) Edit
+        
+  else
+    p Please Add User!
+
