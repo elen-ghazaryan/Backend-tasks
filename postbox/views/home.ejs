@@ -1,0 +1,42 @@
+<div>
+  <h1>Welcome Home page</h1>
+  <hr />
+  <button>
+    <a
+      href="/add"
+      style="
+        text-decoration-line: none;
+        color: rgb(62, 54, 130);
+        font-size: 18px;
+        font-weight: bold;
+      "
+      >Add new post</a
+    >
+  </button>
+  <hr />
+
+  <div>
+    <h2>Posts</h2>
+    <% posts.forEach(post => { %>
+    <div>
+      <h3><%= post.title %></h3>
+      <p><%= post.content %></p>
+      <button>
+        <a
+          href="/post/<%= post.id %>"
+          style="text-decoration-line: none; color: rgb(62, 54, 130)"
+          >View Post</a
+        >
+      </button>
+      <form
+        action="/post/<%= post.id %>/delete"
+        method="POST"
+        style="display: inline-block"
+      >
+        <button type="submit" style="color: red">Delete</button>
+      </form>
+    </div>
+    <% }) %>
+  </div>
+  <hr />
+</div>

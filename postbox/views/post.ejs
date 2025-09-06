@@ -1,0 +1,33 @@
+<div>
+  <h1><%= post.title %></h1>
+  <p><%= post.content %></p>
+
+  <hr>
+
+  <h3>Comments</h3>
+  
+    <% if (post.comments && post.comments.length > 0) { %>
+      <ul>
+      <% post.comments.forEach(comment => { %>
+        <li><%= comment.content %></li>
+      <% }) %>
+      </ul>
+    <% } else { %>
+      <i>No comments yet</i>
+    <% } %>
+  
+
+  <hr>
+
+  <div>
+    <h2>Add comment</h2>
+    <form action="/post/<%= post.id %>/add/comment" method="POST">
+      <textarea name="content" rows="2" cols="30" required></textarea>
+      <button>Publish</button>
+    </form>
+  </div>
+
+  <hr>
+  <a href="/">Go To Home</a>
+
+</div>
