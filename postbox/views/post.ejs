@@ -1,23 +1,29 @@
 <div>
   <h1><%= post.title %></h1>
   <p><%= post.content %></p>
+  <form
+    action="/post/<%= post.id %>/edit"
+    method="GET"
+    style="display: inline-block"
+  >
+    <button type="submit" style="color: rgb(222, 150, 35)">Edit</button>
+  </form>
 
-  <hr>
+  <hr />
 
   <h3>Comments</h3>
-  
-    <% if (post.comments && post.comments.length > 0) { %>
-      <ul>
-      <% post.comments.forEach(comment => { %>
-        <li><%= comment.content %></li>
-      <% }) %>
-      </ul>
-    <% } else { %>
-      <i>No comments yet</i>
-    <% } %>
-  
 
-  <hr>
+  <% if (post.comments && post.comments.length > 0) { %>
+  <ul>
+    <% post.comments.forEach(comment => { %>
+    <li><%= comment.content %></li>
+    <% }) %>
+  </ul>
+  <% } else { %>
+  <i>No comments yet</i>
+  <% } %>
+
+  <hr />
 
   <div>
     <h2>Add comment</h2>
@@ -27,7 +33,6 @@
     </form>
   </div>
 
-  <hr>
+  <hr />
   <a href="/">Go To Home</a>
-
 </div>

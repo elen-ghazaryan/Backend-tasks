@@ -6,5 +6,7 @@ const router = express.Router()
 router.get("/:id", postController.findPost.bind(postController))
 router.post("/:id/add/comment", postController.addComment.bind(postController))
 router.post("/:id/delete", postController.deletePost.bind(postController))
+router.get("/:id/edit", postController.showEditPage.bind(postController))
+router.post("/:id/edit", postController.editPost.bind(postController))
 
 export default router

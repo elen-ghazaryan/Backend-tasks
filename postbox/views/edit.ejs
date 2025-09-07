@@ -1,0 +1,14 @@
+<div>
+  <form action="/post/<%= post.id %>/edit" method="POST">
+    <div>
+      <label>Title</label>
+      <input type="text" name="title" value="<%= post.title %>" required />
+    </div>
+    <div>
+      <label>Content</label>
+      <textarea name="content" rows="4" cols="40"><%= post.content %></textarea>
+    </div>
+
+    <button type="submit">Save changes</button>
+  </form>
+</div>
