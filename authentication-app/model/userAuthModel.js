@@ -15,6 +15,7 @@ class userAuthModel {
     if(!found || !await bcrypt.compare(user.password, found.password)) {
         throw new Error("wrong user credentials")
     }
+    return found
   }
 }
 

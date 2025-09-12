@@ -11,3 +11,8 @@ export const getUserByLogin = async (login) => {
     const users = await getAllUsers()
     return users.find(user => user.login === login)
 }
+
+export const getUserById = async (id) => {
+    const users = await getAllUsers()
+    return users.find(user => user.id === id)
+}
