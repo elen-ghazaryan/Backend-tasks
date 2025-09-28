@@ -1,0 +1,193 @@
+openapi: 3.0.3
+info:
+  title: User Authentication API
+  version: 1.0.0
+  description: API for user signup, login, and getting user info
+servers:
+  - url: http://localhost:4000
+    description: Local server
+paths:
+  /auth/signup:
+    post:
+      summary: Create a new user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - surname
+                - login
+                - password
+              properties:
+                name:
+                  type: string
+                  minLength: 2
+                  example: "John"
+                surname:
+                  type: string
+                  minLength: 2
+                  example: "Doe"
+                login:
+                  type: string
+                  minLength: 4
+                  example: "johndoe123"
+                password:
+                  type: string
+                  description: |
+                    Password must be at least 8 characters long, and include:
+                    - One uppercase letter (A–Z)  
+                    - One lowercase letter (a–z)  
+                    - One special symbol (!@#$%^&* etc.)
+                  minLength: 8
+                  pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\W).+$"
+                  example: "StrongPass1!"
+      responses:
+        '201':
+          description: User successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User successfully created"
+        '400':
+          description: Bad request (missing fields, duplicate login, or weak password)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    examples:
+                      missingFields:
+                        summary: Missing fields
+                        value: "Missing fields: name, password"
+                      weakPassword:
+                        summary: Weak password
+                        value: "Password must be at least 8 characters long, and include uppercase, lowercase, and a special symbol."
+                      duplicateLogin:
+                        summary: Duplicate login
+                        value: "Login already taken"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong while creating the user."
+  /auth/login:
+    post:
+      summary: User login
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - login
+                - password
+              properties:
+                login:
+                  type: string
+                  example: "johndoe123"
+                password:
+                  type: string
+                  example: "StrongPass1!"
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '400':
+          description: Bad request (missing credentials)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid request. Not fully credentials."
+        '401':
+          description: Invalid login or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid login or password"
+  /auth/user:
+    get:
+      summary: Get current user info
+      tags:
+        - Authentication
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Current user info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "John"
+                      surname:
+                        type: string
+                        example: "Doe"
+                      login:
+                        type: string
+                        example: "johndoe123"
+        '401':
+          description: Missing token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Please provide a token"
+        '403':
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid or expired token"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
