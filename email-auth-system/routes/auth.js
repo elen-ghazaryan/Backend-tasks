@@ -22,11 +22,11 @@ router.post("/signup", async (req, res) => {
     if (!firstName || !lastName || !email || !password) {
       return res
         .status(400)
-        .json({ error: "firstName, lastName, email, password are required" });
+        .send({ message: "firstName, lastName, email, password are required" });
     }
 
     const existing = await User.findOne({ where: { email } });
-    if (existing) return res.status(409).json({ error: "Email already in use" });
+    if (existing) return res.status(409).send({ message: "Email already in use" });
 
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
     const user = await User.create({
@@ -37,7 +37,7 @@ router.post("/signup", async (req, res) => {
     });
 
     const token = signToken(user.id);
-    res.status(201).json({
+    res.status(201).send({
       token,
       user: {
         id: user.id,
@@ -48,7 +48,7 @@ router.post("/signup", async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Signup failed" });
+    res.status(500).send({ message: "Signup failed" });
   }
 });
 
@@ -56,7 +56,7 @@ router.post("/login", isBlocked,  async (req, res) => {
   try {
     const { email, password } = req.body || {};
     if (!email || !password)
-      return res.status(400).json({ error: "email and password are required" });
+      return res.status(400).send({ message: "email and password are required" });
 
     const user = req.user;
 
@@ -72,10 +72,10 @@ router.post("/login", isBlocked,  async (req, res) => {
         user.blockedTime = new Date()
         user.attempts = 0;
         await user.save()
-        return res.status(400).json({error: "Request is blocked"})
+        return res.status(400).send({ message: "Request is blocked" })
       }
       
-      return res.status(401).json({ error: "Invalid credentials" });
+      return res.status(401).send({ message: "Invalid credentials" });
     }
 
     const token = signToken(user.id);
@@ -90,7 +90,7 @@ router.post("/login", isBlocked,  async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Login failed" });
+    res.status(500).send({ message: "Login failed" });
   }
 });
 
@@ -99,7 +99,7 @@ router.get("/user", auth, async (req, res) => {
     const user = await User.findByPk(req.userId, {
       attributes: ["id", "firstName", "lastName", "email", "isEmailVerified"],
     });
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!user) return res.status(404).send({ message: "User not found" });
     
     
     // If the email is already verified
@@ -121,7 +121,7 @@ router.get("/user", auth, async (req, res) => {
     );
 
 
-    const verificationLink = `http://localhost:4002/auth/verify?token=${verificationToken}`;
+    const verificationLink = `${process.env.FRONTEND_URL}/verify?token=${verificationToken}`;
 
 
     await transporter.sendMail({
@@ -146,7 +146,7 @@ router.get("/user", auth, async (req, res) => {
     res.json({ message: "Check your email, to confirm it" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to load user" });
+    res.status(500).send({ message: "Failed to load user" });
   }
 });
 
@@ -155,7 +155,7 @@ router.get("/verify", async (req, res) => {
   const { token } = req.query;  // get the token from the URL
 
   if(!token) {
-    res.status(400).send("Missing verification token")
+    return res.status(400).send({message: "Missing verification token" })
   }
 
   try {
@@ -163,11 +163,11 @@ router.get("/verify", async (req, res) => {
 
     const user = await User.findByPk(userId);
     if(!user) {
-      return res.status(404).send("User not found or invalid token payload")
+      return res.status(404).send({ message: "User not found or invalid token payload" })
     }
 
     if(user.isEmailVerified) {
-      return res.send("Email already confirmed! You can close this window")
+      return res.send({message: "Email already confirmed! You can close this window" })
     }
 
     await user.update({ isEmailVerified: true })
@@ -183,7 +183,7 @@ router.get("/verify", async (req, res) => {
 
   } catch(err) {
     console.error(err)
-    res.status(401).send("Invalid or expired verification link")
+    res.status(401).send({ message: "Invalid or expired verification link" })
   }
 })
 

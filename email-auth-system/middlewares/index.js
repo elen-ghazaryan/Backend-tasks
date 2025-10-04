@@ -32,7 +32,7 @@ const isBlocked = async (req, res, next) => {
 
     if(now - blockedTime > THIRTY_SECONDS) {
       user.isBlocked = false;
-      user.time = null;
+      user.blockedTime = null;
       await user.save();
     } else {
       return res.status(400).json({ error: "Request is blocked, wait 30 seconds."})
