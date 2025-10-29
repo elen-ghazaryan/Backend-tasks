@@ -1,0 +1,21 @@
+# Node.js
+node_modules/
+npm-debug.log
+.env
+
+# Logs
+*.log
+
+# Build output
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.suo
+*.swp
